@@ -1,0 +1,28 @@
+# Android Studio / Gradle
+*.iml
+.gradle
+/local.properties
+/.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+*.aab
+
+# Built-in caches
+build/
+*/build/
+
+# Signing keys and Keystores (CRITICAL - DO NOT COMMIT)
+*.jks
+*.keystore
+keystore/
+app/keystore/
+
+# Node / Web preview
+node_modules/
+dist/
+dist-ssr/
+*.local

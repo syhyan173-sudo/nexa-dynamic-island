@@ -1,0 +1,6 @@
+{
+  "name": "Nexa Island - Android Dynamic Island & Companion Studio",
+  "description": "Professional Native Android Dynamic Island application with multi-module architecture, Dark Frosted Glassmorphism, overlay services, and GitHub Actions CI/CD.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

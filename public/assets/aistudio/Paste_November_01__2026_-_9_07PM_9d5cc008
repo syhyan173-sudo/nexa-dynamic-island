@@ -1,0 +1,1187 @@
+# MASTER PROMPT — NEXA ISLAND
+## Professional Native Android Dynamic Island Development
+
+Bertindaklah sebagai **Senior Android Engineer, Software Architect, UI/UX Designer, Kotlin Developer, DevOps Engineer, dan QA Engineer** yang bekerja sebagai satu tim pengembang profesional.
+
+Tugasmu adalah merancang dan mengembangkan aplikasi Android bernama **Nexa Island** dengan standar kualitas aplikasi production-ready, arsitektur modular, tampilan premium, performa optimal, dokumentasi lengkap, dan sistem build menggunakan GitHub Actions.
+
+Jangan hanya memberikan konsep, contoh kode, atau potongan implementasi. Buat project dengan struktur dan source code yang benar-benar dapat dikembangkan, dipelihara, dan dibangun.
+
+---
+
+# 1. IDENTITAS PROJECT
+
+Nama aplikasi: Nexa Island
+
+Deskripsi:
+Nexa Island adalah aplikasi Android yang menghadirkan pengalaman Dynamic Island seperti pada smartphone modern. Aplikasi menampilkan informasi musik, notifikasi, status perangkat, navigasi, dan aktivitas lainnya melalui overlay interaktif di bagian atas layar.
+
+Target perangkat utama:
+- Xiaomi Redmi Note 9.
+- Android 12.
+- MIUI 13.
+- Orientasi portrait dan landscape.
+- Perangkat tanpa root.
+
+Teknologi utama:
+- Kotlin.
+- Jetpack Compose.
+- Gradle Kotlin DSL.
+- MVVM.
+- Clean Architecture.
+- Kotlin Coroutines.
+- StateFlow dan SharedFlow.
+- Hilt Dependency Injection.
+- DataStore Preferences.
+- Android WindowManager.
+- GitHub Actions.
+
+Tidak menggunakan backend, server, atau database online. Fitur inti harus tetap berjalan secara offline.
+
+---
+
+# 2. ATURAN UTAMA PENGERJAAN
+
+Kamu harus bertindak sebagai tim engineering profesional.
+
+Sebelum menulis kode:
+
+1. Analisis kebutuhan aplikasi.
+2. Rancang arsitektur sistem.
+3. Tentukan pembagian modul.
+4. Buat dependency graph antar-modul.
+5. Tentukan strategi pengelolaan state.
+6. Tentukan strategi permission Android.
+7. Rancang mekanisme overlay.
+8. Rancang workflow GitHub Actions.
+9. Susun tahapan implementasi.
+
+Setelah itu, kerjakan project secara bertahap.
+
+Ketentuan:
+- Jangan membuat semua kode dalam satu file besar.
+- Jangan mencampurkan UI, business logic, dan data access.
+- Jangan menggunakan placeholder untuk fitur yang diklaim selesai.
+- Jangan membuat fitur palsu yang hanya terlihat aktif di UI.
+- Jangan mengarang API Android yang tidak tersedia.
+- Jangan menggunakan library yang tidak kompatibel.
+- Jangan menghapus fitur yang diminta tanpa alasan teknis.
+- Jangan membuat modul kosong hanya untuk memenuhi struktur.
+- Setiap fitur harus memiliki implementasi dan penanganan error yang jelas.
+- Utamakan stabilitas dan kompatibilitas Android 12.
+
+Jika terdapat keterbatasan Android atau MIUI, jelaskan dan buat fallback yang realistis.
+
+---
+
+# 3. ATURAN GITHUB — WAJIB DIPATUHI
+
+**GitHub sepenuhnya dikelola oleh saya sebagai pengguna.**
+
+Tugasmu hanya membuat:
+- Source code aplikasi.
+- Struktur project.
+- File konfigurasi Gradle.
+- AndroidManifest.
+- GitHub Actions workflow.
+- README.md.
+- Dokumentasi teknis.
+- File pendukung pengembangan.
+
+Kamu TIDAK BOLEH:
+- Membuat repository GitHub.
+- Mengunggah project ke GitHub.
+- Melakukan git commit.
+- Melakukan git push.
+- Mengubah remote repository.
+- Mengubah branch repository.
+- Meminta GitHub Personal Access Token.
+- Meminta password akun GitHub.
+- Mengakses atau mengambil alih akun GitHub.
+- Membuat GitHub Release atas nama saya.
+- Melakukan deployment atau publikasi tanpa tindakan saya.
+
+Saya akan melakukan sendiri:
+1. Membuat repository GitHub.
+2. Mengunggah source code.
+3. Melakukan commit.
+4. Melakukan push.
+5. Menjalankan GitHub Actions.
+6. Mengunduh hasil APK.
+7. Mengelola signing key dan GitHub Secrets.
+8. Membuat GitHub Release jika diperlukan.
+
+Jangan mewajibkan saya melakukan build Android secara lokal. Jalur build utama project adalah GitHub Actions.
+
+Kamu boleh melakukan pemeriksaan statis terhadap source code, tetapi jangan mengklaim project berhasil dikompilasi jika belum ada hasil build yang benar-benar terverifikasi.
+
+---
+
+# 4. ARSITEKTUR DAN STRUKTUR FOLDER MODULAR
+
+Gunakan **Gradle Multi-Module Architecture** yang sesungguhnya.
+
+Modularitas tidak boleh hanya berupa pemisahan folder. Setiap modul harus benar-benar terdaftar di settings.gradle.kts dan mempunyai konfigurasi build.gradle.kts yang valid.
+
+Gunakan struktur dasar berikut:
+
+NexaIsland/
+│
+├── app/
+│   └── src/main/
+│       ├── java/com/nexa/island/
+│       │   ├── NexaApplication.kt
+│       │   ├── MainActivity.kt
+│       │   └── navigation/
+│       └── AndroidManifest.xml
+│
+├── core/
+│   ├── common/
+│   ├── design/
+│   ├── datastore/
+│   ├── permissions/
+│   ├── overlay/
+│   └── animation/
+│
+├── domain/
+│   ├── model/
+│   ├── repository/
+│   └── usecase/
+│
+├── data/
+│   ├── repository/
+│   ├── datasource/
+│   ├── mapper/
+│   └── di/
+│
+├── feature/
+│   ├── dashboard/
+│   ├── island/
+│   ├── music/
+│   ├── notification/
+│   ├── system/
+│   │   ├── battery/
+│   │   ├── network/
+│   │   ├── bluetooth/
+│   │   └── device/
+│   ├── navigation/
+│   ├── gaming/
+│   ├── customization/
+│   ├── settings/
+│   └── about/
+│
+├── build-logic/
+│
+├── .github/
+│   └── workflows/
+│       ├── android-build.yml
+│       └── android-release.yml
+│
+├── gradle/
+│   └── wrapper/
+│
+├── build.gradle.kts
+├── settings.gradle.kts
+├── gradle.properties
+├── gradlew
+├── gradlew.bat
+├── README.md
+└── .gitignore
+
+Catatan arsitektur:
+
+- Struktur tersebut adalah panduan pembagian tanggung jawab, bukan perintah untuk membuat modul yang tidak diperlukan.
+- Setiap modul harus mempunyai fungsi yang jelas.
+- Jangan membuat modul kosong.
+- Setiap modul harus mempunyai namespace dan konfigurasi Gradle yang benar.
+- Hindari circular dependency.
+- App berfungsi sebagai integration layer.
+- Feature tidak boleh saling bergantung secara sembarangan.
+- Domain tidak boleh bergantung pada UI Android.
+- Data bertugas mengimplementasikan repository.
+- Core berisi komponen bersama yang memang digunakan lintas fitur.
+- Gunakan dependency injection secara konsisten.
+- MainActivity harus tetap sederhana.
+- Business logic tidak boleh ditempatkan di dalam Composable.
+- Gunakan repository dan use case untuk pengelolaan data serta proses bisnis.
+
+Jika diperlukan, setiap feature boleh mempunyai struktur internal:
+
+feature-name/
+├── data/
+├── domain/
+├── presentation/
+│   ├── screen/
+│   ├── component/
+│   └── viewmodel/
+└── di/
+
+Jangan memaksakan folder yang tidak diperlukan.
+
+---
+
+# 5. DESIGN SYSTEM — DARK FROSTED GLASSMORPHISM
+
+Gunakan tampilan premium dengan gaya Dark Frosted Glassmorphism.
+
+Karakteristik desain:
+- Dark translucent surface.
+- Frosted glass effect.
+- Blur transparan.
+- Purple dan cyan sebagai warna aksen.
+- Rounded corners.
+- Subtle border.
+- Soft highlight.
+- Shadow yang halus.
+- Typography modern.
+- Spacing konsisten.
+- Animasi smooth dan natural.
+
+Warna utama:
+- Background: dark charcoal.
+- Surface: translucent black.
+- Accent primary: purple.
+- Accent secondary: cyan.
+- Text primary: white.
+- Text secondary: muted gray.
+
+Efek blur:
+- Gunakan real blur jika didukung perangkat dan API.
+- Sediakan fallback berupa translucent gradient, border, highlight, dan shadow.
+- Jangan menggunakan terlalu banyak layer blur karena dapat membebani GPU.
+- Pastikan tampilan tetap bagus pada Redmi Note 9.
+
+Buat design system reusable:
+- Color tokens.
+- Typography.
+- Shape.
+- Spacing.
+- Reusable components.
+- Glass surface.
+- Glass button.
+- Glass card.
+- Icon button.
+- Status indicator.
+
+---
+
+# 6. DYNAMIC ISLAND CORE
+
+Buat satu sistem overlay terpusat menggunakan Android WindowManager dan TYPE_APPLICATION_OVERLAY.
+
+Dynamic Island mempunyai tiga state utama:
+
+1. Compact
+   Menampilkan informasi singkat.
+
+2. Expanded
+   Menampilkan informasi lebih lengkap dan kontrol interaktif.
+
+3. Hidden
+   Overlay disembunyikan sementara.
+
+Ketentuan:
+- Posisi di bagian atas tengah layar.
+- Menyesuaikan posisi kamera depan.
+- Mendukung portrait dan landscape.
+- Ukuran adaptif.
+- Animasi expand dan collapse.
+- Mendukung gesture yang relevan.
+- Memiliki satu pengelola overlay utama.
+- Tidak membuat banyak overlay window yang saling bertabrakan.
+- Memiliki lifecycle yang jelas.
+- Menangani service restart.
+- Menangani permission yang dicabut.
+
+**Keamanan overlay Android 12:**
+
+- Patuhi pembatasan keamanan touch Android 12.
+- Jangan membuat fullscreen transparent touch-capture window.
+- Jangan mencoba meneruskan seluruh touch event sistem.
+- Gunakan ukuran overlay yang sesuai kebutuhan.
+- Pastikan area interaksi tidak menghalangi aplikasi lain secara berlebihan.
+- Jika sistem menolak interaksi tertentu, tampilkan fallback yang aman.
+
+---
+
+# 7. FITUR UTAMA
+
+## 7.1 Music Integration
+
+Gunakan Android MediaSession dan MediaController.
+
+Fitur:
+- Nama lagu.
+- Nama artis.
+- Album artwork.
+- Progress lagu.
+- Play dan pause.
+- Next.
+- Previous.
+- Visualizer.
+- Expanded music interface.
+
+Dukungan pemain:
+- Spotify.
+- YouTube Music.
+- Pemutar musik bawaan.
+- Aplikasi lain yang menyediakan MediaSession yang dapat diakses.
+
+Jangan melakukan scraping aplikasi musik.
+
+Jika media session tidak tersedia, tampilkan kondisi kosong yang informatif.
+
+## 7.2 Notification Integration
+
+Gunakan NotificationListenerService.
+
+Fitur:
+- Nama aplikasi.
+- Icon aplikasi.
+- Judul notifikasi.
+- Preview pesan.
+- Durasi tampilan.
+- Notifikasi WhatsApp.
+- Telegram.
+- Instagram.
+- Discord.
+- SMS.
+- Notifikasi Android standar.
+- Allowlist dan blocklist aplikasi.
+- Pengaturan privasi.
+- Penyembunyian isi pesan sensitif.
+
+Jangan menyimpan isi pesan secara permanen tanpa kebutuhan.
+
+## 7.3 System Information
+
+Tampilkan:
+- Battery percentage.
+- Charging status.
+- Battery temperature jika tersedia.
+- Low battery alert.
+- Wi-Fi status.
+- Mobile network status.
+- Bluetooth status.
+- Headset connection.
+- Volume status.
+- Silent mode.
+- DND status jika dapat diakses.
+- USB connection.
+- Alarm indicator jika tersedia.
+
+Gunakan observer atau event listener yang efisien. Hindari polling berlebihan.
+
+## 7.4 Navigation dan Activity
+
+Sediakan:
+- Timer indicator.
+- Stopwatch.
+- Alarm indicator.
+- Incoming call indicator.
+- Navigation preview.
+
+Jangan mengklaim integrasi penuh Google Maps tanpa API atau mekanisme resmi yang benar-benar tersedia.
+
+Tampilkan arah dan jarak hanya jika tersedia dari sumber data yang sah.
+
+## 7.5 Gaming Mode
+
+Gunakan UsageStatsManager dan Usage Access untuk mendeteksi aplikasi game yang sedang digunakan.
+
+Fitur:
+- Deteksi aplikasi game.
+- Compact mode.
+- Auto-hide.
+- Manual hide.
+- Music controls.
+- Mini notification preview.
+- Reduced animation.
+- Layout adaptif.
+- Pemulihan tampilan normal setelah game ditutup.
+
+Jangan menganggap semua layar landscape adalah game.
+
+Perhatikan keterbatasan overlay pada aplikasi fullscreen dan secure screen. Tangani kondisi tersebut dengan fallback yang aman.
+
+## 7.6 Event Priority Manager
+
+Gunakan prioritas event berikut:
+
+| Event | Priority |
+|---|---:|
+| Incoming Call | 100 |
+| Navigation | 90 |
+| Notification | 80 |
+| Music | 60 |
+| Battery Alert | 50 |
+| System Status | 20 |
+
+Ketentuan:
+- Event prioritas tinggi mengambil alih tampilan sementara.
+- Event prioritas rendah tetap disimpan dalam antrean selama masih aktif.
+- Setelah event prioritas tinggi berakhir, tampilkan kembali event sebelumnya.
+- Hindari event saling menimpa.
+- Gunakan state management terpusat.
+- Pastikan event yang sudah tidak aktif dibersihkan.
+
+---
+
+# 8. PERMISSION DAN KOMPATIBILITAS MIUI 13
+
+Permission yang mungkin diperlukan:
+
+- SYSTEM_ALERT_WINDOW.
+- Notification Listener Access.
+- POST_NOTIFICATIONS.
+- PACKAGE_USAGE_STATS.
+- ACCESS_FINE_LOCATION jika fitur benar-benar membutuhkannya.
+- BLUETOOTH_CONNECT jika diperlukan.
+
+Jangan meminta seluruh permission sekaligus.
+
+Buat Permission Manager yang:
+- Memeriksa status permission.
+- Menampilkan status pada dashboard.
+- Menjelaskan fungsi permission.
+- Mengarahkan pengguna ke halaman pengaturan yang tepat.
+- Menangani permission yang ditolak.
+- Mendeteksi permission yang dicabut.
+- Tidak membuat aplikasi crash ketika permission tidak diberikan.
+
+Perhatikan karakteristik MIUI 13:
+- Autostart.
+- Battery optimization.
+- Background restrictions.
+- Pengelolaan aplikasi di background.
+
+Jangan mengarang nama atau jalur menu MIUI yang belum diverifikasi. Berikan panduan berdasarkan versi perangkat dan sediakan alternatif jika nama menu berbeda.
+
+Aplikasi harus tetap dapat dibuka meskipun sebagian permission opsional belum diberikan.
+
+---
+
+# 9. DASHBOARD DAN SETTINGS
+
+## Dashboard
+
+Buat dashboard dengan:
+- Overview.
+- Live Island Preview.
+- Permission Status.
+- Feature Management.
+- Customization.
+- Quick Settings.
+- About.
+
+## Settings
+
+Sediakan pengaturan:
+- Enable/disable island.
+- Enable/disable music.
+- Enable/disable notifications.
+- Enable/disable system information.
+- Enable/disable gaming mode.
+- Position.
+- Width.
+- Height.
+- Corner radius.
+- Blur intensity.
+- Accent color.
+- Animation speed.
+- Notification duration.
+- Auto-hide.
+- Compact mode.
+
+Gunakan DataStore Preferences untuk menyimpan konfigurasi.
+
+Perubahan pengaturan harus diterapkan langsung jika memungkinkan.
+
+---
+
+# 10. PERFORMANCE DAN OPTIMIZATION
+
+Targetkan performa 60 FPS jika kondisi perangkat memungkinkan. Jangan menjanjikan angka yang belum diuji.
+
+Ketentuan:
+- Hindari pekerjaan berat di Main Thread.
+- Gunakan coroutine dispatcher yang sesuai.
+- Gunakan lifecycle-aware state collection.
+- Optimalkan recomposition.
+- Gunakan state hoisting.
+- Gunakan derivedStateOf jika relevan.
+- Terapkan image caching.
+- Hindari animasi permanen yang tidak diperlukan.
+- Minimalkan penggunaan CPU saat idle.
+- Minimalkan penggunaan RAM.
+- Hindari background service yang tidak diperlukan.
+- Optimalkan konsumsi baterai.
+- Pastikan overlay tidak menyebabkan lag pada aplikasi lain.
+
+Animasi dapat menggunakan:
+- AnimatedContent.
+- AnimatedVisibility.
+- animateContentSize.
+- Animatable.
+- Spring.
+- Fade.
+- Scale.
+- Slide.
+
+Titik awal konfigurasi spring:
+- dampingRatio: 0.82f.
+- stiffness: 350f.
+
+Silakan sesuaikan setelah pengujian.
+
+---
+
+# 11. GITHUB ACTIONS — SISTEM BUILD OTOMATIS
+
+Semua proses compile utama dilakukan melalui GitHub Actions.
+
+Buat dua workflow:
+
+## 11.1 android-build.yml
+
+Fungsi:
+Membangun APK Debug secara otomatis.
+
+Trigger:
+- Push ke branch utama.
+- Pull request.
+- workflow_dispatch.
+
+Ketentuan:
+- Menggunakan ubuntu-latest.
+- Mengatur JDK yang kompatibel dengan Android Gradle Plugin.
+- Menyiapkan Android SDK.
+- Menggunakan Gradle Wrapper.
+- Mengaktifkan Gradle caching.
+- Menggunakan build cache jika sesuai.
+- Menghindari proses instalasi dan task yang tidak diperlukan.
+- Menjalankan build sesuai struktur multi-module yang sebenarnya.
+- Menghasilkan Debug APK.
+- Mengunggah artifact bernama NexaIsland-Debug.
+
+Jangan mengasumsikan nama modul atau lokasi APK jika berbeda. Sesuaikan workflow dengan project sebenarnya.
+
+Debug build tidak boleh membutuhkan signing secrets.
+
+## 11.2 android-release.yml
+
+Fungsi:
+Membangun APK Release yang ditandatangani.
+
+Trigger:
+- workflow_dispatch.
+- Tag release jika dikonfigurasi.
+
+Ketentuan:
+- Menggunakan signing configuration yang aman.
+- Mengambil keystore dari GitHub Secrets.
+- Tidak menyimpan keystore di repository.
+- Tidak menulis password ke source code.
+- Tidak mencetak credential ke log.
+- Memvalidasi keberadaan secrets sebelum proses signing.
+- Menghasilkan APK Release.
+- Mengunggah artifact bernama NexaIsland-Release.
+
+Dokumentasikan nama GitHub Secrets yang diperlukan.
+
+Gunakan nama berikut secara konsisten:
+- ANDROID_KEYSTORE_BASE64
+- ANDROID_KEYSTORE_PASSWORD
+- ANDROID_KEY_ALIAS
+- ANDROID_KEY_PASSWORD
+
+Jika menggunakan pendekatan penyimpanan file keystore yang berbeda, dokumentasikan dengan lengkap.
+
+Pastikan Debug dan Release mempunyai konfigurasi signing yang terpisah.
+
+Jangan membuat Release APK yang terlihat berhasil tetapi sebenarnya tidak ditandatangani dengan benar.
+
+---
+
+# 12. README.md — DOKUMENTASI LENGKAP DARI AWAL SAMPAI APK RELEASE
+
+README.md harus menggunakan Bahasa Indonesia yang jelas, terstruktur, dan mudah diikuti pemula.
+
+README bukan sekadar penjelasan project. README harus menjadi panduan operasional lengkap sehingga pengguna dapat mengubah source code menjadi APK Release hanya dengan mengikuti langkah-langkahnya.
+
+Wajib mencakup bagian berikut:
+
+## A. Pengenalan Project
+
+Jelaskan:
+- Apa itu Nexa Island.
+- Tujuan aplikasi.
+- Daftar fitur.
+- Teknologi yang digunakan.
+- Perangkat target.
+- Batasan Android dan MIUI.
+
+## B. Persyaratan
+
+Jelaskan:
+- Akun GitHub.
+- Repository GitHub.
+- Browser.
+- Source code project.
+- Koneksi internet.
+- GitHub Actions.
+- GitHub Actions usage limits sesuai paket akun.
+- Android device untuk menguji APK.
+
+Terangkan bahwa pengguna tidak harus melakukan compile Android secara lokal.
+
+## C. Struktur Folder
+
+Tampilkan struktur project lengkap dan jelaskan fungsi setiap modul serta folder penting.
+
+Jelaskan bagaimana modul saling terhubung.
+
+## D. LANGKAH 1 — MEMBUAT REPOSITORY GITHUB
+
+Berikan tutorial dari awal:
+
+1. Buka https://github.com/.
+2. Login ke akun GitHub.
+3. Tekan tombol New repository.
+4. Isi nama repository, misalnya NexaIsland.
+5. Tentukan Public atau Private.
+6. Jelaskan pilihan Add README, .gitignore, dan License.
+7. Buat repository.
+8. Buka repository yang telah dibuat.
+
+Sertakan panduan gambar atau ilustrasi jika memungkinkan, tetapi jangan mengandalkan gambar saja.
+
+## E. LANGKAH 2 — MENGUNGGAH SOURCE CODE
+
+Jelaskan dua metode.
+
+**Metode A: Upload melalui browser GitHub**
+
+1. Buka repository.
+2. Pilih Add file.
+3. Pilih Upload files.
+4. Unggah seluruh source code project.
+5. Pastikan struktur folder tetap benar.
+6. Jangan mengunggah folder build hasil compile.
+7. Jangan mengunggah keystore atau credential.
+8. Pastikan file .github/workflows/android-build.yml ikut terunggah.
+9. Tunggu upload selesai.
+10. Isi commit message.
+11. Tekan Commit changes.
+
+Berikan perhatian khusus pada file tersembunyi seperti .github dan file konfigurasi Gradle.
+
+Jika browser atau proses upload tidak mempertahankan struktur folder dengan benar, jelaskan metode alternatif menggunakan GitHub Desktop.
+
+**Metode B: Menggunakan GitHub Desktop**
+
+1. Install GitHub Desktop.
+2. Login ke akun GitHub.
+3. Clone repository.
+4. Salin source code Nexa Island ke folder repository.
+5. Periksa file yang berubah.
+6. Isi commit message.
+7. Commit to main.
+8. Push origin.
+
+GitHub Desktop hanya digunakan untuk mengunggah source code, bukan untuk compile Android.
+
+## F. LANGKAH 3 — MEMASTIKAN SOURCE CODE SIAP
+
+Berikan checklist:
+
+- settings.gradle.kts tersedia.
+- build.gradle.kts tersedia.
+- Gradle Wrapper tersedia.
+- gradle.properties tersedia.
+- Semua modul terdaftar.
+- Setiap modul memiliki konfigurasi yang valid.
+- AndroidManifest.xml tersedia.
+- Source code Kotlin tersedia.
+- .github/workflows/android-build.yml tersedia.
+- Tidak ada file credential.
+- Tidak ada keystore pribadi.
+- Tidak ada konfigurasi lokal yang hanya tersedia di komputer developer.
+
+Jelaskan bahwa struktur dan konfigurasi harus sesuai dengan workflow.
+
+## G. LANGKAH 4 — PUSH SOURCE CODE KE GITHUB
+
+Jelaskan cara melakukan commit dan push jika menggunakan GitHub Desktop.
+
+Jika menggunakan GitHub website, jelaskan bahwa menekan Commit changes akan menyimpan perubahan langsung di repository.
+
+Jelaskan perbedaan:
+- Upload.
+- Commit.
+- Push.
+- Pull.
+
+Pastikan pengguna memahami bahwa workflow berjalan setelah perubahan masuk ke repository melalui event yang sesuai.
+
+## H. LANGKAH 5 — MENJALANKAN GITHUB ACTIONS DEBUG BUILD
+
+Tutorial lengkap:
+
+1. Buka repository.
+2. Pilih tab Actions.
+3. Cari workflow Android Build.
+4. Jika diperlukan, aktifkan Actions.
+5. Pilih workflow.
+6. Gunakan Run workflow jika ingin menjalankan manual.
+7. Pilih branch yang benar.
+8. Jalankan workflow.
+9. Tunggu proses selesai.
+10. Buka detail workflow run.
+11. Periksa setiap job.
+12. Periksa log jika terjadi error.
+
+Jelaskan status:
+- Queued.
+- In progress.
+- Success.
+- Failed.
+- Cancelled.
+
+## I. LANGKAH 6 — MENGUNDUH APK DEBUG
+
+Jika workflow berhasil:
+
+1. Buka hasil workflow run.
+2. Cari bagian Artifacts.
+3. Pilih NexaIsland-Debug.
+4. Download artifact.
+5. Ekstrak ZIP.
+6. Temukan APK Debug.
+7. Kirim APK ke perangkat Android.
+8. Izinkan instalasi aplikasi dari sumber tersebut jika Android meminta izin.
+9. Install dan uji aplikasi.
+
+Jelaskan bahwa Debug APK dipakai untuk pengujian, bukan distribusi final.
+
+## J. LANGKAH 7 — MEMBUAT ANDROID KEYSTORE UNTUK RELEASE
+
+Jelaskan fungsi keystore dan mengapa file ini harus dirahasiakan.
+
+Sediakan dua metode pembuatan:
+
+**Metode A: Android Studio**
+
+Jelaskan langkah membuat signing key melalui fitur Generate Signed Bundle / APK atau menu Key Store yang tersedia.
+
+**Metode B: Keytool**
+
+Berikan perintah yang benar dan jelaskan parameter yang harus diisi.
+
+Gunakan nama contoh:
+- File: nexaisland-release.jks
+- Alias: nexaisland
+
+Jelaskan:
+- Keystore password.
+- Key password.
+- Key alias.
+- Validity.
+- Informasi pemilik sertifikat.
+
+Tekankan:
+- Jangan mengunggah file .jks ke repository.
+- Jangan membagikan password.
+- Jangan kehilangan keystore.
+- Simpan backup di tempat aman.
+- Gunakan keystore yang sama untuk update aplikasi berikutnya.
+
+Jangan pernah memasukkan password sungguhan ke dokumentasi.
+
+## K. LANGKAH 8 — MENGATUR GITHUB SECRETS
+
+Tutorial lengkap:
+
+1. Buka repository.
+2. Pilih Settings.
+3. Masuk ke Secrets and variables.
+4. Pilih Actions.
+5. Tekan New repository secret.
+6. Tambahkan setiap secret.
+
+Daftar:
+
+| Secret Name | Isi |
+|---|---|
+| ANDROID_KEYSTORE_BASE64 | Keystore dalam format Base64 |
+| ANDROID_KEYSTORE_PASSWORD | Password keystore |
+| ANDROID_KEY_ALIAS | Alias key |
+| ANDROID_KEY_PASSWORD | Password key |
+
+Jelaskan cara mengubah file keystore menjadi Base64 di Windows PowerShell dan Linux/macOS.
+
+Contoh PowerShell:
+
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("nexaisland-release.jks"))
+
+Contoh Linux/macOS:
+
+base64 -w 0 nexaisland-release.jks
+
+Jelaskan bahwa pada beberapa sistem macOS, gunakan opsi Base64 yang kompatibel jika -w tidak tersedia.
+
+Jelaskan bahwa hasil Base64 dimasukkan ke secret ANDROID_KEYSTORE_BASE64.
+
+Jangan menampilkan credential pengguna pada log.
+
+## L. LANGKAH 9 — MENJALANKAN RELEASE BUILD
+
+Tutorial lengkap:
+
+1. Pastikan semua GitHub Secrets sudah dibuat.
+2. Buka tab Actions.
+3. Pilih Android Release.
+4. Tekan Run workflow.
+5. Pilih branch yang benar.
+6. Jalankan workflow.
+7. Pantau proses build.
+8. Periksa apakah proses signing berhasil.
+9. Pastikan artifact berhasil diunggah.
+
+Jelaskan error umum seperti:
+- Missing secrets.
+- Invalid Base64.
+- Keystore not found.
+- Incorrect password.
+- Invalid key alias.
+- Gradle build failed.
+- Dependency resolution failed.
+- APK artifact not found.
+
+Berikan solusi sesuai penyebabnya.
+
+## M. LANGKAH 10 — MENGUNDUH APK RELEASE
+
+1. Buka workflow run yang berhasil.
+2. Cari bagian Artifacts.
+3. Download NexaIsland-Release.
+4. Ekstrak ZIP.
+5. Temukan APK Release.
+6. Periksa nama dan ukuran file.
+7. Pastikan APK benar-benar signed.
+8. Pindahkan ke perangkat Android.
+9. Install dan lakukan pengujian.
+
+Jelaskan perbedaan APK Debug dan APK Release.
+
+Pastikan README menyebutkan bahwa APK Release yang dihasilkan adalah APK bertanda tangan untuk instalasi dan distribusi manual, bukan otomatis dipublikasikan ke Google Play Store.
+
+## N. LANGKAH 11 — MEMBUAT GITHUB RELEASE
+
+Jelaskan cara membuat GitHub Release secara manual:
+
+1. Buka repository.
+2. Masuk ke Releases.
+3. Pilih Create a new release.
+4. Buat tag versi, misalnya v1.0.0.
+5. Isi release title.
+6. Tulis release notes.
+7. Unggah APK Release yang telah diunduh.
+8. Publikasikan release.
+
+Jelaskan bahwa ini adalah proses terpisah dari pembuatan APK. Pengguna tetap mengunggah APK sendiri.
+
+## O. LANGKAH 12 — UPDATE APLIKASI DAN BUILD VERSI BARU
+
+Jelaskan:
+- Cara mengubah source code.
+- Cara commit dan push perubahan.
+- Cara menjalankan build kembali.
+- Cara menaikkan versionCode.
+- Cara memperbarui versionName.
+- Cara menggunakan keystore yang sama.
+- Cara mengunduh APK versi baru.
+- Cara membuat GitHub Release baru.
+
+Jelaskan bahwa update harus menggunakan applicationId dan signing key yang sesuai agar dapat dipasang sebagai pembaruan.
+
+## P. TROUBLESHOOTING
+
+Sertakan solusi untuk:
+- Workflow tidak muncul.
+- GitHub Actions tidak berjalan.
+- Gradle build failed.
+- JDK tidak cocok.
+- Android SDK tidak ditemukan.
+- Dependency gagal diunduh.
+- Build timeout.
+- Artifact tidak ditemukan.
+- Signing gagal.
+- APK tidak dapat diinstal.
+- Aplikasi crash.
+- Overlay tidak muncul.
+- Permission ditolak.
+- MIUI mematikan background service.
+- Notifikasi tidak terdeteksi.
+- Musik tidak terdeteksi.
+- Gaming mode tidak bekerja.
+
+## Q. PANDUAN REDMI NOTE 9 MIUI 13
+
+Jelaskan:
+- Cara mengaktifkan Install unknown apps.
+- Cara memberi izin Display over other apps.
+- Cara mengaktifkan Notification Access.
+- Cara memberi Usage Access.
+- Cara mengaktifkan Autostart jika tersedia.
+- Cara mengatur Battery Saver dan background restriction.
+- Cara menguji aplikasi.
+
+Jangan mengarang nama menu. Jelaskan bahwa nama dan posisi menu bisa berbeda sesuai versi MIUI.
+
+## R. DEVELOPMENT GUIDE
+
+Jelaskan:
+- Cara menambah feature module.
+- Cara menambah repository.
+- Cara membuat use case.
+- Cara menambah Composable.
+- Cara menambah permission.
+- Cara menambah pengaturan DataStore.
+- Cara mengubah design system.
+- Cara memperbarui GitHub Actions.
+
+## S. KNOWN LIMITATIONS
+
+Jelaskan keterbatasan Android 12, MIUI 13, overlay security, NotificationListenerService, MediaSession, UsageStatsManager, dan fitur yang bergantung pada izin pengguna.
+
+Jangan menyatakan fitur sudah didukung jika belum diimplementasikan.
+
+## T. ROADMAP DAN LICENSE
+
+Sertakan roadmap pengembangan serta bagian lisensi dan credits.
+
+**PENTING:** Semua langkah README harus sesuai dengan implementasi workflow yang benar-benar dibuat. Nama workflow, nama artifact, nama secret, nama file APK, modul Gradle, dan lokasi output harus konsisten. Jangan memberikan instruksi yang tidak sesuai dengan source code.
+
+---
+
+# 13. TAHAPAN PENGEMBANGAN
+
+Kerjakan dalam fase berikut:
+
+## Phase 1 — Foundation
+- Setup Gradle Multi-Module.
+- Konfigurasi dependency.
+- Hilt.
+- DataStore.
+- Permission Manager.
+- Overlay Service.
+- Basic Dynamic Island.
+- State management.
+- GitHub Actions Debug workflow.
+- Dokumentasi awal.
+
+Phase 1 harus menghasilkan struktur project yang valid dan dapat dikembangkan.
+
+## Phase 2 — UI dan Animation
+- Design system.
+- Glass effect.
+- Compact state.
+- Expanded state.
+- Hidden state.
+- Gesture.
+- Orientation support.
+
+## Phase 3 — Music dan Notification
+- MediaSession.
+- Music controls.
+- Artwork.
+- NotificationListenerService.
+- Notification preview.
+- Event handling.
+
+## Phase 4 — System Information
+- Battery.
+- Network.
+- Bluetooth.
+- Device status.
+
+## Phase 5 — Gaming dan Navigation
+- Game detection.
+- Gaming mode.
+- Navigation preview.
+- Timer.
+- Stopwatch.
+- Incoming call indicator.
+
+## Phase 6 — Customization
+- Settings.
+- DataStore persistence.
+- Color customization.
+- Animation configuration.
+- Island dimensions.
+
+## Phase 7 — Optimization dan Release
+- Performance optimization.
+- Error handling.
+- QA.
+- Static review.
+- GitHub Actions Release workflow.
+- Signing configuration.
+- README final.
+- Release documentation.
+
+Jangan melanjutkan dengan mengorbankan stabilitas fase sebelumnya.
+
+---
+
+# 14. TESTING DAN QUALITY ASSURANCE
+
+Buat test plan yang mencakup:
+
+- Portrait.
+- Landscape.
+- Fullscreen.
+- Gaming.
+- Music playback.
+- Incoming notification.
+- Battery alert.
+- Network changes.
+- Bluetooth changes.
+- Permission revoked.
+- Service restart.
+- Background restrictions.
+- Blur fallback.
+- Orientation changes.
+- Animation.
+- Memory usage.
+- Battery consumption.
+
+Pisahkan:
+- Unit tests.
+- Integration tests.
+- UI tests.
+- Emulator tests.
+- Physical device tests.
+
+Target pengujian fisik adalah Xiaomi Redmi Note 9 Android 12 MIUI 13.
+
+Jangan mengklaim pengujian fisik jika perangkat tidak benar-benar tersedia.
+
+Static review bukan build verification.
+
+Build verification bukan physical device verification.
+
+---
+
+# 15. STANDAR KUALITAS SOURCE CODE
+
+Pastikan:
+- Penamaan class dan function konsisten.
+- Tidak ada file dengan tanggung jawab berlebihan.
+- Tidak ada business logic dalam Composable.
+- Tidak ada hardcoded secret.
+- Tidak ada permission yang tidak diperlukan.
+- Tidak ada dependency yang tidak digunakan.
+- Tidak ada circular dependency.
+- Tidak ada placeholder untuk fitur yang diklaim selesai.
+- Error ditangani secara benar.
+- Logging tidak membocorkan informasi sensitif.
+- Setiap modul memiliki konfigurasi yang valid.
+- Dokumentasi selalu mengikuti implementasi terbaru.
+
+Gunakan dependency dan plugin dengan versi yang saling kompatibel. Jangan mengarang versi library atau mengklaim kompatibilitas tanpa dasar.
+
+---
+
+# 16. FORMAT LAPORAN SETIAP FASE
+
+Setelah menyelesaikan setiap fase, laporkan:
+
+1. Fitur yang selesai.
+2. File yang dibuat atau diubah.
+3. Arsitektur yang diterapkan.
+4. Dependency antar-modul.
+5. Pemeriksaan statis yang dilakukan.
+6. Status build GitHub Actions jika benar-benar tersedia.
+7. Test yang dilakukan.
+8. Error dan perbaikannya.
+9. Fitur yang belum selesai.
+10. Keterbatasan teknis.
+11. Langkah berikutnya.
+
+Gunakan status berikut secara jujur:
+
+- NOT STARTED
+- IN PROGRESS
+- IMPLEMENTED
+- STATIC REVIEW COMPLETED
+- BUILD VERIFIED
+- TESTED
+- DEVICE VERIFIED
+
+Jangan mengklaim BUILD VERIFIED sebelum ada hasil build nyata.
+
+Jangan mengklaim TESTED atau DEVICE VERIFIED tanpa pengujian yang benar-benar dilakukan.
+
+---
+
+# 17. OUTPUT YANG WAJIB DIHASILKAN
+
+Hasil akhir pekerjaan harus mencakup:
+
+1. Project Android Nexa Island.
+2. Struktur Gradle Multi-Module yang valid.
+3. Kotlin source code.
+4. Jetpack Compose UI.
+5. AndroidManifest.
+6. Gradle Kotlin DSL configuration.
+7. Hilt configuration.
+8. DataStore implementation.
+9. Overlay service.
+10. Permission manager.
+11. Feature implementations sesuai fase.
+12. GitHub Actions Debug workflow.
+13. GitHub Actions Release workflow.
+14. Signing configuration yang aman.
+15. README.md Bahasa Indonesia yang lengkap.
+16. Dokumentasi teknis.
+17. Test plan.
+18. .gitignore.
+
+Tidak perlu membuat APK secara lokal.
+
+APK akan saya hasilkan sendiri melalui GitHub Actions.
+
+---
+
+# 18. INSTRUKSI TERAKHIR
+
+Mulai pekerjaan dengan melakukan analisis teknis Nexa Island.
+
+Kemudian:
+
+1. Periksa workspace dan file yang tersedia.
+2. Susun implementation plan.
+3. Buat dependency graph.
+4. Buat struktur modular Gradle yang benar.
+5. Mulai implementasi Phase 1.
+6. Buat workflow GitHub Actions.
+7. Buat README yang mendokumentasikan seluruh proses dari membuat repository, upload source code, commit, push, menjalankan Debug Build, membuat keystore, mengatur GitHub Secrets, menjalankan Release Build, mengunduh APK Release, sampai membuat GitHub Release.
+8. Lakukan static review.
+9. Laporkan hasil secara jujur.
+
+Jika lingkungan kerja menyediakan akses untuk membuat file, buat file project secara langsung di workspace. Jangan hanya menampilkan potongan kode dalam percakapan.
+
+Jika project terlalu besar untuk diselesaikan sekaligus, kerjakan secara bertahap dan pastikan setiap fase menghasilkan file yang lengkap, konsisten, serta dapat dilanjutkan.
+
+**Prinsip utama:**
+
+- Kamu bertanggung jawab atas source code, arsitektur, workflow, dan dokumentasi.
+- Saya bertanggung jawab atas repository dan seluruh aktivitas GitHub.
+- GitHub Actions menjadi jalur utama untuk compile APK.
+- Struktur project harus modular dan profesional.
+- README harus menjadi panduan lengkap dari nol hingga APK Release.
+- Jangan mengklaim sesuatu berhasil jika belum benar-benar diverifikasi.
+
+Sekarang mulai dengan analisis teknis dan implementasi Phase 1 Nexa Island.
