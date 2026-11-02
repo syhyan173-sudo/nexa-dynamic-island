@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
@@ -19,7 +18,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nexa.island.domain.model.ActiveIslandSession
-import com.nexa.island.domain.model.IslandEventType
 
 @Composable
 fun ExpandedIslandContent(
@@ -31,9 +29,13 @@ fun ExpandedIslandContent(
     onMediaPrevious: () -> Unit = {}
 ) {
     val event = session.currentEvent
-    val isMedia = event?.type == IslandEventType.MEDIA
+    val eventText = event?.id ?: ""
+    // Otomatis mengenali notifikasi musik dari kata kunci media/spotify
+    val isMedia = eventText.contains("spotify", ignoreCase = true) || 
+                  eventText.contains("music", ignoreCase = true) || 
+                  eventText.contains("media", ignoreCase = true)
 
-    // JIKA NOTIFIKASI BERUPA PEMUTAR MUSIK (MEDIA)
+    // MODE 1: KONTROL PEMUTAR MUSIK (MEDIA)
     if (isMedia) {
         Column(
             modifier = Modifier
@@ -44,7 +46,6 @@ fun ExpandedIslandContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Cover Art / Icon Musik
                 Box(
                     modifier = Modifier
                         .size(48.dp)
@@ -58,7 +59,7 @@ fun ExpandedIslandContent(
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = event?.id ?: "Playing Music",
+                        text = if (eventText.isNotBlank()) eventText else "Playing Music",
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp,
@@ -66,7 +67,7 @@ fun ExpandedIslandContent(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "Spotify",
+                        text = "Pemutar Musik Active",
                         color = Color.White.copy(alpha = 0.7f),
                         fontSize = 13.sp,
                         maxLines = 1,
@@ -77,7 +78,6 @@ fun ExpandedIslandContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Music Progress Bar
             LinearProgressIndicator(
                 progress = { 0.4f },
                 modifier = Modifier
@@ -89,7 +89,6 @@ fun ExpandedIslandContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Tombol Kontrol Musik
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
@@ -112,7 +111,7 @@ fun ExpandedIslandContent(
             }
         }
     } 
-    // JIKA NOTIFIKASI PESAN BIASA (WA, DISCORD, DLL)
+    // MODE 2: NOTIFIKASI PESAN (WA / DISCORD)
     else {
         var replyText by remember { mutableStateOf("") }
 
@@ -132,7 +131,7 @@ fun ExpandedIslandContent(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = event?.id?.take(1) ?: "N",
+                        text = eventText.take(1).ifEmpty { "N" },
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
@@ -151,7 +150,7 @@ fun ExpandedIslandContent(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = event?.id ?: "Pesan baru masuk",
+                        text = if (eventText.isNotBlank()) eventText else "Pesan baru masuk",
                         color = Color.White.copy(alpha = 0.8f),
                         fontSize = 13.sp,
                         maxLines = 10,
@@ -162,7 +161,6 @@ fun ExpandedIslandContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Kolom Balas Pesan
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
