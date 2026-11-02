@@ -30,6 +30,7 @@ fun DynamicIslandOverlayView(
     settings: IslandSettings,
     onToggleExpansion: () -> Unit,
     onDismissEvent: (String) -> Unit,
+    onSendReply: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     if (session.expansionState == IslandExpansionState.HIDDEN || !settings.isIslandEnabled) {
@@ -46,13 +47,13 @@ fun DynamicIslandOverlayView(
 
     val widthModifier = when (session.expansionState) {
         IslandExpansionState.COMPACT -> Modifier.width(settings.islandWidthDp.dp)
-        IslandExpansionState.EXPANDED -> Modifier.fillMaxWidth(0.92f)
+        IslandExpansionState.EXPANDED -> Modifier.fillMaxWidth(0.94f)
         IslandExpansionState.HIDDEN -> Modifier.width(0.dp)
     }
 
     val heightModifier = when (session.expansionState) {
         IslandExpansionState.COMPACT -> Modifier.heightIn(min = settings.islandHeightDp.dp, max = settings.islandHeightDp.dp)
-        IslandExpansionState.EXPANDED -> Modifier.heightIn(min = 120.dp)
+        IslandExpansionState.EXPANDED -> Modifier.heightIn(min = 140.dp)
         IslandExpansionState.HIDDEN -> Modifier.heightIn(max = 0.dp)
     }
 
@@ -84,8 +85,11 @@ fun DynamicIslandOverlayView(
                 }
                 IslandExpansionState.EXPANDED -> {
                     ExpandedIslandContent(
-                        event = session.currentEvent,
-                        onDismiss = onDismissEvent
+                        session = session,
+                        onDismiss = {
+                            session.currentEvent?.let { onDismissEvent(it.id) }
+                        },
+                        onSendReply = onSendReply
                     )
                 }
                 IslandExpansionState.HIDDEN -> {
