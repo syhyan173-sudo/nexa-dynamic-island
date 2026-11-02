@@ -1,0 +1,94 @@
+name: Android Build (Release Signed)
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-release:
+    name: Assemble Signed Release APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/libs.versions.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Validate GitHub Secrets
+        run: |
+          if [ -z "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+            echo "::error::ANDROID_KEYSTORE_BASE64 is missing! Please configure repository secret."
+            exit 1
+          fi
+          if [ -z "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" ]; then
+            echo "::error::ANDROID_KEYSTORE_PASSWORD is missing! Please configure repository secret."
+            exit 1
+          fi
+          if [ -z "${{ secrets.ANDROID_KEY_ALIAS }}" ]; then
+            echo "::error::ANDROID_KEY_ALIAS is missing! Please configure repository secret."
+            exit 1
+          fi
+          if [ -z "${{ secrets.ANDROID_KEY_PASSWORD }}" ]; then
+            echo "::error::ANDROID_KEY_PASSWORD is missing! Please configure repository secret."
+            exit 1
+          fi
+          echo "All required release signing secrets are present."
+
+      - name: Decode Android Keystore
+        run: |
+          mkdir -p app/keystore
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > app/keystore/release.jks
+          if [ ! -s app/keystore/release.jks ]; then
+            echo "::error::Decoded keystore file is empty or corrupted."
+            exit 1
+          fi
+          echo "Keystore successfully decoded to app/keystore/release.jks"
+
+      - name: Make Gradle Wrapper Executable
+        run: chmod +x ./gradlew
+
+      - name: Build Signed Release APK
+        env:
+          KEYSTORE_FILE: "keystore/release.jks"
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: ./gradlew assembleRelease --stacktrace --no-daemon
+
+      - name: Clean Keystore File
+        if: always()
+        run: |
+          rm -f app/keystore/release.jks
+          echo "Cleaned temporary keystore file."
+
+      - name: Verify Release APK
+        run: |
+          echo "Listing generated Release APKs..."
+          ls -la app/build/outputs/apk/release/
+
+      - name: Upload Release APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NexaIsland-Release
+          path: app/build/outputs/apk/release/*.apk
+          retention-days: 30
