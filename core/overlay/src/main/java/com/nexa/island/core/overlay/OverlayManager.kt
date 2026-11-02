@@ -2,7 +2,6 @@ package com.nexa.island.core.overlay
 
 import android.content.Context
 import android.graphics.PixelFormat
-import android.os.Build
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
@@ -27,10 +26,10 @@ class OverlayManager @Inject constructor(
     ): WindowManager.LayoutParams {
         val type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
 
+        // FLAG_WATCH_OUTSIDE_TOUCH dihapus agar event sentuhan di dalam area island berfungsi normal
         val flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
 
         return WindowManager.LayoutParams(
             widthPx,
@@ -63,12 +62,10 @@ class OverlayManager @Inject constructor(
     @Synchronized
     fun updateOverlay(params: WindowManager.LayoutParams) {
         activeView?.let { view ->
-            if (isAttached) {
-                try {
-                    windowManager.updateViewLayout(view, params)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+            try {
+                windowManager.updateViewLayout(view, params)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
