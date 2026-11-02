@@ -31,9 +31,10 @@ fun ExpandedIslandContent(
     onMediaPrevious: () -> Unit = {}
 ) {
     val event = session.currentEvent
+    val isMedia = event?.type == IslandEventType.MEDIA
 
     // JIKA NOTIFIKASI BERUPA PEMUTAR MUSIK (MEDIA)
-    if (event?.type == IslandEventType.MEDIA) {
+    if (isMedia) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -43,11 +44,11 @@ fun ExpandedIslandContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Ikon Cover / Music Art
+                // Cover Art / Icon Musik
                 Box(
                     modifier = Modifier
                         .size(48.dp)
-                        .background(Color(0xFF1DB954), RoundedCornerShape(12.dp)), // Warna khas Spotify
+                        .background(Color(0xFF1DB954), RoundedCornerShape(12.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text("🎵", fontSize = 22.sp)
@@ -56,18 +57,16 @@ fun ExpandedIslandContent(
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Column(modifier = Modifier.weight(1f)) {
-                    // Judul Lagu
                     Text(
-                        text = event.title.ifEmpty { "Playing Music" },
+                        text = event?.id ?: "Playing Music",
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    // Nama Penyanyi / Artis
                     Text(
-                        text = event.message.ifEmpty { "Spotify" },
+                        text = "Spotify",
                         color = Color.White.copy(alpha = 0.7f),
                         fontSize = 13.sp,
                         maxLines = 1,
@@ -80,7 +79,7 @@ fun ExpandedIslandContent(
 
             // Music Progress Bar
             LinearProgressIndicator(
-                progress = { 0.4f }, // Bar kemajuan lagu
+                progress = { 0.4f },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(4.dp),
@@ -90,7 +89,7 @@ fun ExpandedIslandContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Tombol Kontrol Musik (Previous - Play/Pause - Next)
+            // Tombol Kontrol Musik
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
@@ -133,7 +132,7 @@ fun ExpandedIslandContent(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = event?.title?.take(1) ?: "N",
+                        text = event?.id?.take(1) ?: "N",
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
@@ -144,7 +143,7 @@ fun ExpandedIslandContent(
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = event?.title ?: "Notifikasi",
+                        text = "Notifikasi",
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp,
@@ -152,7 +151,7 @@ fun ExpandedIslandContent(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = event?.message ?: "",
+                        text = event?.id ?: "Pesan baru masuk",
                         color = Color.White.copy(alpha = 0.8f),
                         fontSize = 13.sp,
                         maxLines = 10,
